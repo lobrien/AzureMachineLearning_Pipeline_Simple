@@ -11,10 +11,10 @@ RANDOM_STATE = 42
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--X_train_path', dest='X_train_path', required=True)
-parser.add_argument('--X_test_path', dest='X_test_path', required=True)
-parser.add_argument('--y_train_path', dest='y_train_path', required=True)
-parser.add_argument('--y_test_path', dest='y_test_path', required=True)
+parser.add_argument('--X_train_dir', dest='X_train_dir', required=True)
+parser.add_argument('--X_test_dir', dest='X_test_dir', required=True)
+parser.add_argument('--y_train_dir', dest='y_train_dir', required=True)
+parser.add_argument('--y_test_dir', dest='y_test_dir', required=True)
 
 args = parser.parse_args()
 
@@ -26,17 +26,17 @@ le = LabelEncoder()
 le.fit(df['species'])
 X_train, X_test, y_train, y_test = train_test_split(df.iloc[:,1:4], le.transform(df['species']), test_size=0.2, random_state=RANDOM_STATE)
 
-# Write outputs as `PipelineData`
+# Write outputs as `OutputFileDatasetConfig`
+x_train_fname = os.path.join(args.X_train_dir, "data.txt")
+x_test_fname = os.path.join(args.X_test_dir, "data.txt")
+y_train_fname = os.path.join(args.y_train_dir, "data.txt")
+y_test_fname = os.path.join(args.y_test_dir, "data.txt")
 
-## Make directory for file
-os.makedirs(os.path.dirname(args.X_train_path), exist_ok=True)
-os.makedirs(os.path.dirname(args.X_test_path), exist_ok=True)
-os.makedirs(os.path.dirname(args.y_train_path), exist_ok=True)
-os.makedirs(os.path.dirname(args.y_test_path), exist_ok=True)
+print(f"X_train written to {x_train_fname}")
 
 ## And save the data
-np.savetxt(args.X_train_path, X_train, delimiter=',')
-np.savetxt(args.X_test_path, X_test, delimiter=',')
-np.savetxt(args.y_train_path, y_train, delimiter=',')
-np.savetxt(args.y_test_path, y_test, delimiter=',')
+np.savetxt(x_train_fname, X_train, delimiter=',')
+np.savetxt(x_test_fname, X_test, delimiter=',')
+np.savetxt(y_train_fname, y_train, delimiter=',')
+np.savetxt(y_test_fname, y_test, delimiter=',')
 

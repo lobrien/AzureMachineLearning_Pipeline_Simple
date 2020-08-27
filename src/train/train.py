@@ -4,17 +4,23 @@ from sklearn.naive_bayes import GaussianNB
 from joblib import dump
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--X_train_path', dest='X_train_path', required=True)
-parser.add_argument('--y_train_path', dest='y_train_path', required=True)
-parser.add_argument('--model_path', dest='model_path', required=True)
+parser.add_argument('--X_train_dir', dest='X_train_dir', required=True)
+parser.add_argument('--y_train_dir', dest='y_train_dir', required=True)
+parser.add_argument('--model_dir', dest='model_dir', required=True)
 
 args = parser.parse_args()
 
-X_train = np.genfromtxt(args.X_train_path, delimiter=',')
-y_train = np.genfromtxt(args.y_train_path, delimiter=',')
+print(f"X_train received as {args.X_train_dir}")
+
+x_path = os.path.join(args.X_train_dir, "data.txt")
+y_path = os.path.join(args.y_train_dir, "data.txt")
+
+X_train = np.genfromtxt(x_path, delimiter=',')
+y_train = np.genfromtxt(y_path, delimiter=',')
 
 # Training (trivial)
 model = GaussianNB()
 model.fit(X_train, y_train)
 
-dump(model, args.model_path)
+model_path = os.path.join(args.model_dir, "model.pkl")
+dump(model, model_path)
